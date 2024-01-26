@@ -1,91 +1,144 @@
 import Cocoa
 import SwiftUI
 import AVFoundation
+import SQLite3
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem!
     var keystrokes = ""
+    var buffer = ""
     var menu: NSMenu!
+    var db: OpaquePointer?
+    var justCountMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Request Accessibility Permissions
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
         let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
-
-        if accessEnabled {
-            print("Accessibility permissions are enabled.")
-        } else {
-            print("Please enable accessibility permissions for JustDetector.")
-        }
-
-        // Setup Menu Bar Icon with a default image
+        
+        initializeDatabase()
+        
         self.statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = self.statusBarItem.button {
-            button.image = NSImage(named: "StatusBarIconDefault") // Set your default icon here
-            print("Default menu bar icon set.")
-        } else {
-            print("Failed to set default menu bar icon.")
+            button.image = NSImage(named: "StatusBarIconDefault")
         }
         
-        // Create the menu
         menu = NSMenu()
-
-        // Add a Quit App menu item
+        justCountMenuItem = NSMenuItem(title: "Just Count: 0", action: #selector(updateJustCount), keyEquivalent: "")
+        menu.addItem(justCountMenuItem)
         menu.addItem(NSMenuItem(title: "Quit JustDetector", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-
-        // Attach the menu to the status bar item
         statusBarItem.menu = menu
-
-        // Track Keystrokes
+        
+        updateJustCount()
+        
         NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] (event) in
             guard let characters = event.charactersIgnoringModifiers else {
-                print("Key event could not be read.")
                 return
             }
-            
-            self?.keystrokes.append(contentsOf: characters.lowercased())
-            if self?.keystrokes.hasSuffix("just") ?? false {
-                print("Detected 'just'.")
-                self?.keystrokes = "" // Clear keystrokes after detection
-                DispatchQueue.main.async {
-                    self?.triggerAlert()
+            if let self = self {
+                self.keystrokes.append(contentsOf: characters.lowercased())
+                self.buffer.append(contentsOf: characters.lowercased())
+                
+                if self.keystrokes.hasSuffix("just") {
+                    self.triggerAlert()
+                    self.keystrokes = ""
                 }
-            }
-
-            // Clear the keystrokes buffer when space or return is pressed
-            if characters == " " || characters == "\r" {
-                self?.keystrokes = ""
+                
+                if characters == " " || characters == "\r" {
+                    self.keystrokes = ""
+                }
+                
+                if self.buffer.count > 120 {
+                    self.buffer.removeFirst(self.buffer.count - 120)
+                }
             }
         }
     }
 
+    func initializeDatabase() {
+        let fileURL = try! FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("JustDetector.sqlite")
+        if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
+            return
+        }
+
+        let createTableQuery = "CREATE TABLE IF NOT EXISTS Logs (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT, word TEXT, context TEXT)"
+        if sqlite3_exec(db, createTableQuery, nil, nil, nil) != SQLITE_OK {
+            return
+        }
+    }
+
+    func logWord(timestamp: String, word: String, context: String) {
+        var stmt: OpaquePointer?
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let formattedTimestamp = formatter.string(from: Date())
+
+        let insertQuery = "INSERT INTO Logs (timestamp, word, context) VALUES (?, ?, ?)"
+        if sqlite3_prepare_v2(db, insertQuery, -1, &stmt, nil) != SQLITE_OK {
+            return
+        }
+
+        sqlite3_bind_text(stmt, 1, (formattedTimestamp as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 2, (word as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 3, (context as NSString).utf8String, -1, nil)
+
+        if sqlite3_step(stmt) == SQLITE_DONE {
+            updateJustCount()
+        }
+
+        sqlite3_finalize(stmt)
+    }
+
+    func captureContext() -> String {
+        let justIndex = buffer.range(of: "just", options: .backwards)?.lowerBound ?? buffer.endIndex
+        let startIdx = max(buffer.index(justIndex, offsetBy: -60, limitedBy: buffer.startIndex) ?? buffer.startIndex, buffer.startIndex)
+        let endIdx = min(buffer.index(justIndex, offsetBy: 60, limitedBy: buffer.endIndex) ?? buffer.endIndex, buffer.endIndex)
+        
+        let contextRange = startIdx..<endIdx
+        return String(buffer[contextRange])
+    }
+
     func triggerAlert() {
-        print("Triggering alert.")
         flashMenuBarIcon()
         playSound()
+        let context = captureContext()
+        logWord(timestamp: ISO8601DateFormatter().string(from: Date()), word: "just", context: context)
     }
 
     func flashMenuBarIcon() {
         guard let button = self.statusBarItem.button else {
-            print("Failed to access the status bar button.")
             return
         }
         
-        // Set the icon to a red version
         DispatchQueue.main.async {
-            print("Changing menu bar icon to red.")
-            button.image = NSImage(named: "StatusBarIconRed") // Set your red icon here
+            button.image = NSImage(named: "StatusBarIconRed")
         }
         
-        // Change back to the default icon after 0.5 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            print("Reverting menu bar icon to default.")
-            button.image = NSImage(named: "StatusBarIconDefault") // Set your default icon here
+            button.image = NSImage(named: "StatusBarIconDefault")
         }
     }
 
     func playSound() {
-        print("Playing sound.")
-        NSSound.beep() // Play the system beep sound
+        NSSound.beep()
+    }
+
+    @objc func updateJustCount() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let today = formatter.string(from: Date())
+
+        let query = "SELECT COUNT(*) FROM Logs WHERE timestamp LIKE '\(today)%' AND word = 'just'"
+        var queryStatement: OpaquePointer? = nil
+
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                let count = sqlite3_column_int(queryStatement, 0)
+                DispatchQueue.main.async {
+                    self.justCountMenuItem.title = "Just Count: \(count)"
+                }
+            }
+        }
+
+        sqlite3_finalize(queryStatement)
     }
 }

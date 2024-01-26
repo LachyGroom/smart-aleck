@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AD5447C22B62E54B007EC26E /* JustDetectorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447C12B62E54B007EC26E /* JustDetectorApp.swift */; };
-		AD5447C42B62E54B007EC26E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447C32B62E54B007EC26E /* ContentView.swift */; };
 		AD5447C62B62E54C007EC26E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD5447C52B62E54C007EC26E /* Assets.xcassets */; };
 		AD5447C92B62E54C007EC26E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD5447C82B62E54C007EC26E /* Preview Assets.xcassets */; };
 		AD5447D12B62E5FD007EC26E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447D02B62E5FD007EC26E /* AppDelegate.swift */; };
@@ -17,7 +16,6 @@
 /* Begin PBXFileReference section */
 		AD5447BE2B62E54B007EC26E /* JustDetector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustDetector.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD5447C12B62E54B007EC26E /* JustDetectorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JustDetectorApp.swift; sourceTree = "<group>"; };
-		AD5447C32B62E54B007EC26E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AD5447C52B62E54C007EC26E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD5447C82B62E54C007EC26E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AD5447CA2B62E54C007EC26E /* JustDetector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JustDetector.entitlements; sourceTree = "<group>"; };
@@ -55,7 +53,6 @@
 			isa = PBXGroup;
 			children = (
 				AD5447C12B62E54B007EC26E /* JustDetectorApp.swift */,
-				AD5447C32B62E54B007EC26E /* ContentView.swift */,
 				AD5447C52B62E54C007EC26E /* Assets.xcassets */,
 				AD5447CA2B62E54C007EC26E /* JustDetector.entitlements */,
 				AD5447C72B62E54C007EC26E /* Preview Content */,
@@ -143,7 +140,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD5447D12B62E5FD007EC26E /* AppDelegate.swift in Sources */,
-				AD5447C42B62E54B007EC26E /* ContentView.swift in Sources */,
 				AD5447C22B62E54B007EC26E /* JustDetectorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
