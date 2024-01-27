@@ -11,6 +11,9 @@
 		AD5447C62B62E54C007EC26E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD5447C52B62E54C007EC26E /* Assets.xcassets */; };
 		AD5447C92B62E54C007EC26E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD5447C82B62E54C007EC26E /* Preview Assets.xcassets */; };
 		AD5447D12B62E5FD007EC26E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447D02B62E5FD007EC26E /* AppDelegate.swift */; };
+		AD5447D32B645DBD007EC26E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447D22B645DBD007EC26E /* DatabaseManager.swift */; };
+		AD5447D52B64840E007EC26E /* KeystrokeMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447D42B64840E007EC26E /* KeystrokeMonitor.swift */; };
+		AD5447D72B64A0E8007EC26E /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5447D62B64A0E8007EC26E /* MenuController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +23,9 @@
 		AD5447C82B62E54C007EC26E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AD5447CA2B62E54C007EC26E /* JustDetector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JustDetector.entitlements; sourceTree = "<group>"; };
 		AD5447D02B62E5FD007EC26E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AD5447D22B645DBD007EC26E /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		AD5447D42B64840E007EC26E /* KeystrokeMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeystrokeMonitor.swift; sourceTree = "<group>"; };
+		AD5447D62B64A0E8007EC26E /* MenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,9 @@
 				AD5447CA2B62E54C007EC26E /* JustDetector.entitlements */,
 				AD5447C72B62E54C007EC26E /* Preview Content */,
 				AD5447D02B62E5FD007EC26E /* AppDelegate.swift */,
+				AD5447D22B645DBD007EC26E /* DatabaseManager.swift */,
+				AD5447D42B64840E007EC26E /* KeystrokeMonitor.swift */,
+				AD5447D62B64A0E8007EC26E /* MenuController.swift */,
 			);
 			path = JustDetector;
 			sourceTree = "<group>";
@@ -139,8 +148,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD5447D72B64A0E8007EC26E /* MenuController.swift in Sources */,
 				AD5447D12B62E5FD007EC26E /* AppDelegate.swift in Sources */,
 				AD5447C22B62E54B007EC26E /* JustDetectorApp.swift in Sources */,
+				AD5447D52B64840E007EC26E /* KeystrokeMonitor.swift in Sources */,
+				AD5447D32B645DBD007EC26E /* DatabaseManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,10 +283,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = JustDetector/JustDetector.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"JustDetector/Preview Content\"";
+				DEVELOPMENT_TEAM = 3FCX997L3F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -297,10 +311,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = JustDetector/JustDetector.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"JustDetector/Preview Content\"";
+				DEVELOPMENT_TEAM = 3FCX997L3F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
